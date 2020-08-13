@@ -7,6 +7,10 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import ButtonArrow from "./ButtonArrow";
+import background from "../../assets/background.jpg";
+import mobileBackground from "../../assets/mobileBackground.jpg";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
 	learnButton: {
@@ -18,26 +22,75 @@ const useStyles = makeStyles((theme) => ({
 			marginBottom: "2em",
 		},
 	},
+	background: {
+		backgroundImage: `url(${background})`,
+		backgroundPosition: "center",
+		backgroundSize: "cover",
+		backgroundAttachment: "fixed",
+		backgroundRepeat: "no-repeat",
+		height: "60em",
+		width: "100%",
+		[theme.breakpoints.down("md")]: {
+			backgroundImage: `url(${mobileBackground})`,
+			backgroundAttachment: "inherit",
+		},
+	},
+	estimateButton: {
+		...theme.typography.estimate,
+		borderRadius: 50,
+		height: 80,
+		width: 205,
+		backgroundColor: theme.palette.common.orange,
+		fontSize: "1.5rem",
+		marginRight: "5em",
+		marginLeft: "2em",
+		"&:hover": {
+			backgroundColor: theme.palette.secondary.light,
+		},
+		[theme.breakpoints.down("sm")]: {
+			marginLeft: 0,
+			marginRight: 0,
+		},
+	},
 }));
 
-export default function CallToAction() {
+export default function CallToAction(props) {
 	const classes = useStyles();
 	const theme = useTheme();
+	const matchesSM = useMediaQuery(theme.breakpoints.down("sm"));
 
 	return (
-		<Grid container>
-			<Grid item>
+		<Grid
+			container
+			style={{ height: "60em" }}
+			alignItems='center'
+			justify={matchesSM ? "center" : "space-between"}
+			className={classes.background}
+			direction={matchesSM ? "column" : "row"}>
+			<Grid
+				item
+				style={{
+					marginLeft: matchesSM ? 0 : "5em",
+					textAlign: matchesSM ? "center" : "inherit",
+				}}>
 				<Grid container direction='column'>
 					<Grid item>
 						<Typography variant='h2'>
 							Simple Software.
 							<br /> Revolutionary Results.
 						</Typography>
-						<Typography variant='subtitle2'>
+						<Typography variant='subtitle2' style={{ fontSize: "1.5rem" }}>
 							Take advantage of the 21st Century.
 						</Typography>
-						<Grid container item>
-							<Button variant='outlined' className={classes.learnButton}>
+						<Grid container item justify={matchesSM ? "center" : undefined}>
+							<Button
+								component={Link}
+								to='/revolution'
+								onClick={() => {
+									props.setValue(2);
+								}}
+								variant='outlined'
+								className={classes.learnButton}>
 								<span style={{ marginRight: 5 }}>Learn More</span>
 								<ButtonArrow
 									width={10}
@@ -48,6 +101,18 @@ export default function CallToAction() {
 						</Grid>
 					</Grid>
 				</Grid>
+			</Grid>
+			<Grid item>
+				<Button
+					component={Link}
+					to='/estimate'
+					onClick={() => {
+						props.setValue(5);
+					}}
+					variant='contained'
+					className={classes.estimateButton}>
+					Free Estimate
+				</Button>
 			</Grid>
 		</Grid>
 	);
